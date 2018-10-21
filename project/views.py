@@ -22,12 +22,12 @@ def login_required(func):
             return func(*args, **kwargs)
         else:
             flash('You need to login first')
-            redirect(url_for('login'))
-
+            return redirect(url_for('login'))
     return wrapper
 
 
 @app.route('/logout/')
+@login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
@@ -91,7 +91,7 @@ def new_task():
 def complete(task_id):
     db.session.query(Task).filter_by(task_id=task_id).update({"status": 0})
     db.session.commit()
-    flash('Task marked complete')
+    flash('Task marked complete.')
     return redirect(url_for('tasks'))
 
 
